@@ -30,10 +30,10 @@ LIFE = pygame.transform.scale(pygame.image.load(os.path.join("assets", "life_tra
 ELECTRIC = pygame.transform.scale(pygame.image.load(os.path.join("assets", "electric_trans.png")), (60, 60))
 
 # Background
-MAIN_BG = pygame.transform.scale(pygame.image.load(os.path.join("assets", "bg_1.png")), (WIDTH, HEIGHT))
+MAIN_BG = pygame.transform.scale(pygame.image.load(os.path.join("assets", "bg_2.png")), (WIDTH, HEIGHT))
 BG = []
 BG.append(pygame.transform.scale(pygame.image.load(os.path.join("assets", "bg.png")), (WIDTH, HEIGHT)))
-BG.append(pygame.transform.scale(pygame.image.load(os.path.join("assets", "bg_2.png")), (WIDTH, HEIGHT)))
+BG.append(pygame.transform.scale(pygame.image.load(os.path.join("assets", "bg_4.png")), (WIDTH, HEIGHT)))
 BG.append(pygame.transform.scale(pygame.image.load(os.path.join("assets", "bg_3.png")), (WIDTH, HEIGHT)))
 BG.append(pygame.transform.scale(pygame.image.load(os.path.join("assets", "background-black.png")), (WIDTH, HEIGHT)))
 
@@ -216,6 +216,9 @@ def collide(obj1, obj2):
     return obj1.mask.overlap(obj2.mask, (offset_x, offset_y)) != None
 
 def main():
+    bgY = 0
+    bgY2 = HEIGHT
+
     run = True
     level = 0
     main_font = pygame.font.SysFont("comicsans", 35)
@@ -244,7 +247,9 @@ def main():
     lost_count = 0
 
     def redraw_window():
-        WIN.blit(BG[((level+1)//4)%4], (0,0))
+        WIN.blit(BG[((level+1)//4)%4], (0,bgY))
+        WIN.blit(BG[((level+1)//4)%4], (0,bgY2))
+
         # text
         levels_label = main_font.render(f"Level: {level}", 1, (255,255,255))
 
@@ -275,6 +280,13 @@ def main():
         clock.tick(FPS)
         redraw_window()
         
+        bgY += 0.8
+        bgY2 += 0.8
+        if bgY > HEIGHT:
+            bgY = -HEIGHT
+        if bgY2 > HEIGHT:
+            bgY2 = -HEIGHT 
+
         players_health = 0
         total_lives = 0
         for player in players:
