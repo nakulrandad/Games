@@ -5,10 +5,10 @@ import os
 import random
 pygame.init()
 
-FPS = 60
+FPS = 50
 WIDTH, HEIGHT = 800, 800
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Space Shooter Game")
+pygame.display.set_caption("Phoenix Shooter")
 
 # Load images
 RED_SPACE_SHIP = pygame.image.load(os.path.join("assets", "pixel_ship_red_small.png"))
@@ -17,12 +17,14 @@ BLUE_SPACE_SHIP = pygame.image.load(os.path.join("assets", "pixel_ship_blue_smal
 
 # Player image
 YELLOW_SPACE_SHIP = pygame.image.load(os.path.join("assets", "pixel_ship_yellow.png"))
+ORANGE_SPACE_SHIP = pygame.image.load(os.path.join("assets", "pixel_ship_orange.png"))
 
 # Lasers
 RED_LASER = pygame.image.load(os.path.join("assets", "pixel_laser_red.png"))
 GREEN_LASER = pygame.image.load(os.path.join("assets", "pixel_laser_green.png"))
 BLUE_LASER = pygame.image.load(os.path.join("assets", "pixel_laser_blue.png"))
 YELLOW_LASER = pygame.image.load(os.path.join("assets", "pixel_laser_yellow.png"))
+ORANGE_LASER = pygame.image.load(os.path.join("assets", "pixel_laser_orange.png"))
 
 # Powerups
 HEART = pygame.transform.scale(pygame.image.load(os.path.join("assets", "heart_trans.png")), (70, 70))
@@ -32,10 +34,9 @@ ELECTRIC = pygame.transform.scale(pygame.image.load(os.path.join("assets", "elec
 # Background
 MAIN_BG = pygame.transform.scale(pygame.image.load(os.path.join("assets", "bg_2.png")), (WIDTH, HEIGHT))
 BG = []
-BG.append(pygame.transform.scale(pygame.image.load(os.path.join("assets", "bg.png")), (WIDTH, HEIGHT)))
-BG.append(pygame.transform.scale(pygame.image.load(os.path.join("assets", "bg_4.png")), (WIDTH, HEIGHT)))
-BG.append(pygame.transform.scale(pygame.image.load(os.path.join("assets", "bg_3.png")), (WIDTH, HEIGHT)))
 BG.append(pygame.transform.scale(pygame.image.load(os.path.join("assets", "background-black.png")), (WIDTH, HEIGHT)))
+BG.append(pygame.transform.scale(pygame.image.load(os.path.join("assets", "bg.png")), (WIDTH, HEIGHT)))
+BG.append(pygame.transform.scale(pygame.image.load(os.path.join("assets", "bg_3_edit.png")), (WIDTH, HEIGHT)))
 
 
 def play_music(location):
@@ -98,9 +99,10 @@ class Ship:
         self.COOLDOWN = FPS/2
     
     def draw(self, window):
-        window.blit(self.ship_img, (self.x, self.y))
         for laser in self.lasers:
             laser.draw(window)
+        window.blit(self.ship_img, (self.x, self.y))
+
 
     def move_lasers(self, vel, obj):
         self.cooldown()
@@ -136,8 +138,12 @@ class Player(Ship):
 
     def __init__(self, x, y, health=100):
         super().__init__(x,y, health)
-        self.ship_img = YELLOW_SPACE_SHIP
-        self.laser_img = YELLOW_LASER
+        if Player.player_num % 2 == 1:
+            self.ship_img = YELLOW_SPACE_SHIP
+            self.laser_img = YELLOW_LASER
+        else:
+            self.ship_img = ORANGE_SPACE_SHIP
+            self.laser_img = ORANGE_LASER
         self.mask = pygame.mask.from_surface(self.ship_img)
         self.max_health = health
         self.vel = 10
@@ -247,8 +253,8 @@ def main():
     lost_count = 0
 
     def redraw_window():
-        WIN.blit(BG[((level+1)//4)%4], (0,bgY))
-        WIN.blit(BG[((level+1)//4)%4], (0,bgY2))
+        WIN.blit(BG[((level-1)//3)%3], (0,bgY))
+        WIN.blit(BG[((level-1)//3)%3], (0,bgY2))
 
         # text
         levels_label = main_font.render(f"Level: {level}", 1, (255,255,255))
@@ -284,8 +290,10 @@ def main():
         bgY2 += 0.8
         if bgY > HEIGHT:
             bgY = -HEIGHT
+            # print("turning 1")
         if bgY2 > HEIGHT:
             bgY2 = -HEIGHT 
+            # print("turning 2")
 
         players_health = 0
         total_lives = 0
@@ -332,9 +340,10 @@ def main():
                 player.vel = 10
             else:
                 player.high_speed_time = 0
-
+        
+        keys = pygame.key.get_pressed()
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
+            if event.type == pygame.QUIT or keys[pygame.K_ESCAPE]:
                 run = False
         
         keys = pygame.key.get_pressed()
@@ -351,6 +360,7 @@ def main():
             player1.shoot()
             # play_music("assets/laser_swoosh_cut.mp3")
 
+        keys = pygame.key.get_pressed()
 
         if num_of_players == 2:
             if keys[pygame.K_LEFT] and player2.x - player2.vel > 0: # left
