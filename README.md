@@ -1,4 +1,4 @@
-# apps
+# Games for you to play... 🎮🎲
 
-These are the games developed by me and my friends.
-Enjoy it!
+Here are some games developed by me because why not 😄.
+Enjoy them (and give valuable feedback)!
