@@ -1,8 +1,6 @@
-import pygame
-import sys
 import os
-
-# import time
+import sys
+import pygame
 import random
 
 pygame.init()
@@ -11,76 +9,87 @@ FPS = 50
 WIDTH, HEIGHT = 800, 800
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Phoenix Shooter")
+asset_file_loc = os.path.join(os.path.dirname(__file__), "assets")
 
 # Load images
 RED_SPACE_SHIP = pygame.image.load(
-    os.path.join("assets", "pixel_ship_red_small.png")
+    os.path.join(asset_file_loc, "pixel_ship_red_small.png")
 )
 GREEN_SPACE_SHIP = pygame.image.load(
-    os.path.join("assets", "pixel_ship_green_small.png")
+    os.path.join(asset_file_loc, "pixel_ship_green_small.png")
 )
 BLUE_SPACE_SHIP = pygame.image.load(
-    os.path.join("assets", "pixel_ship_blue_small.png")
+    os.path.join(asset_file_loc, "pixel_ship_blue_small.png")
 )
 
 # Player image
 YELLOW_SPACE_SHIP = pygame.image.load(
-    os.path.join("assets", "pixel_ship_yellow.png")
+    os.path.join(asset_file_loc, "pixel_ship_yellow.png")
 )
 ORANGE_SPACE_SHIP = pygame.image.load(
-    os.path.join("assets", "pixel_ship_orange.png")
+    os.path.join(asset_file_loc, "pixel_ship_orange.png")
 )
 
 # Lasers
-RED_LASER = pygame.image.load(os.path.join("assets", "pixel_laser_red.png"))
-GREEN_LASER = pygame.image.load(
-    os.path.join("assets", "pixel_laser_green.png")
+RED_LASER = pygame.image.load(
+    os.path.join(asset_file_loc, "pixel_laser_red.png")
 )
-BLUE_LASER = pygame.image.load(os.path.join("assets", "pixel_laser_blue.png"))
+GREEN_LASER = pygame.image.load(
+    os.path.join(asset_file_loc, "pixel_laser_green.png")
+)
+BLUE_LASER = pygame.image.load(
+    os.path.join(asset_file_loc, "pixel_laser_blue.png")
+)
 YELLOW_LASER = pygame.image.load(
-    os.path.join("assets", "pixel_laser_yellow.png")
+    os.path.join(asset_file_loc, "pixel_laser_yellow.png")
 )
 ORANGE_LASER = pygame.image.load(
-    os.path.join("assets", "pixel_laser_orange.png")
+    os.path.join(asset_file_loc, "pixel_laser_orange.png")
 )
 
 # Powerups
 HEART = pygame.transform.scale(
-    pygame.image.load(os.path.join("assets", "heart_trans.png")), (70, 70)
+    pygame.image.load(os.path.join(asset_file_loc, "heart_trans.png")),
+    (70, 70),
 )
 LIFE = pygame.transform.scale(
-    pygame.image.load(os.path.join("assets", "life_trans.png")), (45, 45)
+    pygame.image.load(os.path.join(asset_file_loc, "life_trans.png")), (45, 45)
 )
 ELECTRIC = pygame.transform.scale(
-    pygame.image.load(os.path.join("assets", "electric_trans.png")), (60, 60)
+    pygame.image.load(os.path.join(asset_file_loc, "electric_trans.png")),
+    (60, 60),
 )
 
 # Background
 MAIN_BG = pygame.transform.scale(
-    pygame.image.load(os.path.join("assets", "bg_2.png")), (WIDTH, HEIGHT)
+    pygame.image.load(os.path.join(asset_file_loc, "bg_2.png")),
+    (WIDTH, HEIGHT),
 )
 BG = []
 BG.append(
     pygame.transform.scale(
-        pygame.image.load(os.path.join("assets", "background-black.png")),
+        pygame.image.load(
+            os.path.join(asset_file_loc, "background-black.png")
+        ),
         (WIDTH, HEIGHT),
     )
 )
 BG.append(
     pygame.transform.scale(
-        pygame.image.load(os.path.join("assets", "bg.png")), (WIDTH, HEIGHT)
+        pygame.image.load(os.path.join(asset_file_loc, "bg.png")),
+        (WIDTH, HEIGHT),
     )
 )
 BG.append(
     pygame.transform.scale(
-        pygame.image.load(os.path.join("assets", "bg_3_edit.png")),
+        pygame.image.load(os.path.join(asset_file_loc, "bg_3_edit.png")),
         (WIDTH, HEIGHT),
     )
 )
 
 
 def play_music(location):
-    pygame.mixer.music.load(location)
+    pygame.mixer.music.load(os.path.join(asset_file_loc, location))
     pygame.mixer.music.play()
 
 
@@ -216,7 +225,7 @@ class Player(Ship):
                     if laser.collision(obj):
                         objs.remove(obj)
                         self.score += 10
-                        play_music("assets/enemy_explosion.mp3")
+                        play_music("music/enemy_explosion.mp3")
                         if laser in self.lasers:
                             self.lasers.remove(laser)
 
@@ -379,7 +388,7 @@ def main():
                     player.lives -= 1
                     player.health = player.max_health
                 else:
-                    play_music("assets/player_explosion.mp3")
+                    play_music("music/player_explosion.mp3")
                     dead_players.append(player)
                     players.remove(player)
 
@@ -395,7 +404,7 @@ def main():
 
         if len(enemies) == 0:
             level += 1
-            play_music("assets/level_up.mp3")
+            play_music("music/level_up.mp3")
 
             for i in range(wave_length):
                 enemy = Enemy(
@@ -440,7 +449,7 @@ def main():
             player1.y += player1.vel
         if keys[pygame.K_SPACE]:
             player1.shoot()
-            # play_music("assets/laser_swoosh_cut.mp3")
+            # play_music("music/laser_swoosh_cut.mp3")
 
         keys = pygame.key.get_pressed()
 
@@ -462,7 +471,7 @@ def main():
                 player2.y += player2.vel
             if keys[pygame.K_KP0]:
                 player2.shoot()
-                # play_music("assets/laser_swoosh_cut.mp3")
+                # play_music("music/laser_swoosh_cut.mp3")
 
         if random.randrange(0, 80 * FPS) == 5:
             powerup1 = Powerup(
@@ -493,7 +502,7 @@ def main():
 
             for player in players:
                 if collide(powerup, player):
-                    play_music("assets/small_tick.mp3")
+                    play_music("music/small_tick.mp3")
                     if powerup.kind == "heart":
                         powerup.increase_health(player)
                     if powerup.kind == "life":
@@ -513,7 +522,7 @@ def main():
                 if collide(enemy, player):
                     player.health -= 10
                     enemies.remove(enemy)
-                    play_music("assets/enemy_explosion.mp3")
+                    play_music("music/enemy_explosion.mp3")
                     player.add_score(10)
                 elif enemy.y + enemy.get_height() > HEIGHT:
                     for i in players:
@@ -547,12 +556,12 @@ def main_menu():
                 sys.exit()
             if keys[pygame.K_1]:
                 num_of_players = 1
-                play_music("assets/game_begin.mp3")  # Play opening music
+                play_music("music/game_begin.mp3")  # Play opening music
                 pygame.time.delay(2000)
                 main()
             if keys[pygame.K_2]:
                 num_of_players = 2
-                play_music("assets/game_begin.mp3")  # Play opening music
+                play_music("music/game_begin.mp3")  # Play opening music
                 pygame.time.delay(2000)
                 main()
     sys.exit()
