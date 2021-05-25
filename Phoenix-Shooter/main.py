@@ -432,6 +432,7 @@ def main():
                 run = False
 
         keys = pygame.key.get_pressed()
+        is_auto_shoot = False
 
         if keys[pygame.K_a] and player1.x - player1.vel > 0:  # left
             player1.x -= player1.vel
@@ -447,7 +448,7 @@ def main():
             and player1.y + player1.vel + player1.get_height() + 15 < HEIGHT
         ):  # down
             player1.y += player1.vel
-        if keys[pygame.K_SPACE]:
+        if keys[pygame.K_SPACE] or is_auto_shoot:
             player1.shoot()
             # play_music("music/laser_swoosh_cut.mp3")
 
@@ -469,7 +470,7 @@ def main():
                 < HEIGHT
             ):  # down
                 player2.y += player2.vel
-            if keys[pygame.K_KP0]:
+            if keys[pygame.K_KP0] or is_auto_shoot:
                 player2.shoot()
                 # play_music("music/laser_swoosh_cut.mp3")
 
